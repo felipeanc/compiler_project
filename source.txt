@@ -1,0 +1,28 @@
+programa begin
+    int x, y, z;
+    char a;
+    float f;
+
+    x := 0;
+
+    while(x > y) do 
+      begin
+        x := y + z
+      end
+
+    if(x > y) then
+      begin
+        x := y
+      end
+    else
+      begin
+        z := x
+      end
+
+    repeat 
+      begin
+        y := z
+      end
+    while(y <= z)
+    
+end
