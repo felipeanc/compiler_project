@@ -36,7 +36,7 @@ class TKS(Enum):
     LPAR = auto() # LPAR (
     RPAR = auto() # RPAR )
     DD = auto() # double dot :
-    #TODO IMPLEMENTAR TOKEN ;
+    CD = auto() # comma dot ;
 
 @dataclass(init=True)
 class Token:
