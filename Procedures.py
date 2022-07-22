@@ -1,5 +1,4 @@
 from Token import TKS
-from Analyzer import lex
 
 prox_token = TKS.NONE
 
@@ -13,6 +12,12 @@ def procedure_ini():
       print("Error: id expected")
   else:
     print("Error: 'programa' expected")
+  
+  prox_token = lex()
+  if prox_token == TKS.EOF:
+    print("Entrada aceita")
+  else:
+    print("Entrada rejeitada")
 
 def procedure_bloco():
   if prox_token == TKS.BEGIN:

@@ -18,18 +18,24 @@ class Analyzer:
 
   #loop do analisador
   def begin(self):
-    self.source_code = open(self.source_file, "r")
+    self.source_code = open(self.source_file, "rb")
+    print("[lexical] Arquivo fonte aberto")
     self.digitos = [str(x) for x in range(10)] # [0-9]
     self.letra_ = [chr(x) for x in range(65, 91)] # [A-Z]
     self.letra_ += [chr(x) for x in range(97, 123)] # [a-z]
     self.letra_ += '_'
+    print("[lexical] Vetores auxiliares criados")
 
   def stop(self):
     self.source_code.close()
+    print("[lexical] Arquivo fonte fechado")
 
   def lex(self):
+    #print("[lexical] Solicitando prox token")
     state = 0
     c = self.source_code.read(1)
+    c = c.decode('UTF-8')
+    w = c
     pos = 0
     line = 0
     col = 0
@@ -37,10 +43,13 @@ class Analyzer:
 
     st = SymbolTable()
     while(True):
+        #print(f"[lexical] Estado: {state} simbolo: {c}")
         s = str(state)
         if not lookahead and not s.startswith('f'): 
           try:
             c = self.source_code.read(1) #se não fez lookahead, e não está em um estado final, lê next char
+            c = c.decode('UTF-8')
+            w += c
           except StopIteration:
             print("End of file")
             break
@@ -131,7 +140,7 @@ class Analyzer:
             if c == '=': 
               state = 0
               token = Token(TKS.RELOP, TKS.NE, line, ini_col)
-              print(token)
+              print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             else:
               print(f'Error l:{line} c:{ini_col}')
               break
@@ -628,7 +637,7 @@ class Analyzer:
           case 'f1':
             state = 0
             token = Token(TKS.RELOP, TKS.EQ, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.EQ
           
           #todo setInt(), tabela de simbolos
@@ -636,7 +645,7 @@ class Analyzer:
             state = 0
             token = Token(TKS.NUM, TKS.NONE, line, ini_col)
             st.insert(token)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.NUM
           
           #todo setID(), tabela de simbolos
@@ -645,56 +654,57 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.ID, TKS.NONE, line, ini_col)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             st.insert(token)
-            print(token)
+            #print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.ID
 
           case 'f4':
             state = 0
             token = Token(TKS.LPAR, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.LPAR
 
           case 'f5':
             state = 0
             token = Token(TKS.RPAR, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.RPAR
 
           case 'f6':
             state = 0
             token = Token(TKS.SUM, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.SUM
 
           case 'f7':
             state = 0
             token = Token(TKS.DIF, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.DIF
 
           case 'f8':
             state = 0
             token = Token(TKS.MULT, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.MULT
           
           case 'f9':
             state = 0
             token = Token(TKS.DIV, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.DIV
 
           case 'f10':
             state = 0
             token = Token(TKS.EXP, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.EXP
 
           case 'f11':
             state = 0
             token = Token(TKS.RELOP, TKS.LE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.RELOP            
           
           case 'f12':
@@ -702,13 +712,13 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.RELOP, TKS.LT, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.RELOP 
           
           case 'f13':
             state = 0
             token = Token(TKS.RELOP, TKS.GE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.RELOP 
           
           case 'f14':
@@ -716,19 +726,19 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.RELOP, TKS.GT, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.RELOP 
 
           case 'f15':
             state = 0
             token = Token(TKS.RELOP, TKS.NE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.RELOP 
           
           case 'f16':
             state = 0
             token = Token(TKS.ATTR, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.ATTR
 
           case 'f17':
@@ -744,7 +754,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.LITERAL, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.LITERAL 
 
           case 'f20':
@@ -752,7 +762,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.BEGIN, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.BEGIN
           
           case 'f21':
@@ -760,7 +770,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.TYPE, TKS.CHAR, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.TYPE
           
           case 'f22':
@@ -768,7 +778,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.DO, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.DO
           
           case 'f23':
@@ -776,7 +786,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.END, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.END
 
           case 'f24':
@@ -784,7 +794,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.ELSE, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.ELSE
 
           case 'f25':
@@ -792,7 +802,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.TYPE, TKS.FLOAT, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.TYPE
 
           case 'f26':
@@ -800,7 +810,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.IF, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.IF
 
           case 'f27':
@@ -808,7 +818,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.PROGRAMA, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.PROGRAMA
 
           case 'f28':
@@ -816,7 +826,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.REPEAT, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.REPEAT
 
           case 'f29':
@@ -824,7 +834,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.THEN, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.THEN
 
           case 'f30':
@@ -832,7 +842,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.WHILE, TKS.NONE, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.WHILE
 
           case 'f31':
@@ -840,7 +850,7 @@ class Analyzer:
             lookahead = True
             self.source_code.seek(-1, 1)
             token = Token(TKS.TYPE, TKS.INT, line, ini_col)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.TYPE
           
           #todo setFrac(), tabela de simbolos
@@ -848,7 +858,7 @@ class Analyzer:
             state = 0
             token = Token(TKS.FNUM, TKS.NONE, line, ini_col)
             st.insert(token)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.FNUM
           
           #todo setExp(), tabela de simbolos
@@ -856,7 +866,7 @@ class Analyzer:
             state = 0
             token = Token(TKS.FNUM, TKS.NONE, line, ini_col)
             st.insert(token)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.TYPE
           
           case 'f34':
@@ -865,12 +875,12 @@ class Analyzer:
             self.source_code.seek(-1, 1)
             token = Token(TKS.DD, TKS.NONE, line, ini_col)
             st.insert(token)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.DD
           
           case 'f35':
             state = 0
             token = Token(TKS.CD, TKS.NONE, line, ini_col)
             st.insert(token)
-            print(token)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.CD
