@@ -22,7 +22,7 @@ class SymbolTable:
       symbol.pos = len(self.table) + 1
       self.table.append(symbol)
       token.attribute = symbol.pos
-      print(f'Symbol {symbol} added to the table.')
+      #print(f'Symbol {symbol} added to the table.')
     else:
       print(f'Symbol {symbol} already in table.')
 

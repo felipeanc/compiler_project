@@ -3,9 +3,14 @@ from Token import *
 
 class Analyzer:
   source_file:str
+  source_code = None
 
   def __init__(self, path:str) -> None:
     self.source_file = path
+    self.source_code = open(self.source_file, "rb")
+    print("[lexical] Iniciando analisador lexico")
+    print("[lexical] Arquivo fonte aberto")
+    self.begin()
 
   def reader(self):
       with open(self.source_file) as f:
@@ -18,8 +23,6 @@ class Analyzer:
 
   #loop do analisador
   def begin(self):
-    self.source_code = open(self.source_file, "rb")
-    print("[lexical] Arquivo fonte aberto")
     self.digitos = [str(x) for x in range(10)] # [0-9]
     self.letra_ = [chr(x) for x in range(65, 91)] # [A-Z]
     self.letra_ += [chr(x) for x in range(97, 123)] # [a-z]
@@ -31,30 +34,27 @@ class Analyzer:
     print("[lexical] Arquivo fonte fechado")
 
   def lex(self):
-    #print("[lexical] Solicitando prox token")
     state = 0
-    c = self.source_code.read(1)
-    c = c.decode('UTF-8')
-    w = c
-    pos = 0
+    w = ""
     line = 0
     col = 0
     lookahead = False #flag pra identificar se fez lookahead ou não
 
     st = SymbolTable()
     while(True):
-        #print(f"[lexical] Estado: {state} simbolo: {c}")
+        
         s = str(state)
-        if not lookahead and not s.startswith('f'): 
+        if not s.startswith('f'): 
           try:
             c = self.source_code.read(1) #se não fez lookahead, e não está em um estado final, lê next char
             c = c.decode('UTF-8')
-            w += c
+            if not c in ['\t', '\r', '\n', ' ', ',']:
+              w += c
+              #print(f"[lexical] Estado: {state} simbolo: {c} lexema: {w}")
           except StopIteration:
             print("End of file")
             break
-        else:
-          lookahead = False
+
         col += 1
         if c == '\n':
           line += 1
@@ -62,7 +62,7 @@ class Analyzer:
 
         if col > 100:
           break
-        
+
         match s:
           case '0': #estado 0 inicial
             ini_col = col
@@ -116,12 +116,16 @@ class Analyzer:
               state = 'f10'
             elif c == '[':
               state = 17
-            elif c in ['\t', '\r', '\n', ' ', ',']:
+            elif c in ['\t', '\r', '\n', ' ']:
               state = 18
             elif c == '\'':
               state = 19
             elif c == ';':
               state = 'f35'
+            elif c == ',':
+              state = 'f36'
+            elif c == '$':
+              state = 'f37'
 
           ########################### RELOP ###########################
           case '1':
@@ -155,7 +159,6 @@ class Analyzer:
               state = 'f16'
             else:
               state = 'f34'
-              break
           ########################### ATTR ###########################
 
           ######################### NUMERO #########################
@@ -643,6 +646,7 @@ class Analyzer:
           #todo setInt(), tabela de simbolos
           case 'f2':
             state = 0
+            self.source_code.seek(-1, 1)
             token = Token(TKS.NUM, TKS.NONE, line, ini_col)
             st.insert(token)
             print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
@@ -653,6 +657,7 @@ class Analyzer:
             state = 0
             lookahead = True
             self.source_code.seek(-1, 1)
+            w = w[:-1]
             token = Token(TKS.ID, TKS.NONE, line, ini_col)
             print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             st.insert(token)
@@ -748,6 +753,7 @@ class Analyzer:
             state = 0
             lookahead = True
             self.source_code.seek(-1, 1)
+            w = w[:-1]
           
           case 'f19':
             state = 0
@@ -884,3 +890,12 @@ class Analyzer:
             st.insert(token)
             print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
             return TKS.CD
+          
+          case 'f36':
+            token = Token(TKS.COMMA, TKS.NONE, line, ini_col)
+            print(f"[lexical] Token {token.name}, {token.attribute}, w: {w.strip()}")
+            return TKS.COMMA
+
+          case 'f37':
+            print("[lexical] Fim do arquivo")
+            return TKS.EOF

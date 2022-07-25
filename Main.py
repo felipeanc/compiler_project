@@ -1,15 +1,15 @@
 from Analyzer import Analyzer
-from Procedures import *
+from SyntaxAnalyzer import SyntaxAnalyzer
 
 source_code = "source.txt"
-analyzer = Analyzer(source_code)
-analyzer.begin()
+teste = "teste.txt"
+#analyzer = Analyzer(source_code)
+#analyzer.begin()
 
-prox_token = analyzer.lex()
-print(prox_token)
-while prox_token != None:
-  prox_token = analyzer.lex()
-  #print(prox_token)
-#procedure_ini()
+# while prox_token != None:
+#   print(prox_token)
+#   prox_token = analyzer.lex()
 
-analyzer.stop()
+syntax = SyntaxAnalyzer(source_code)
+syntax.procedure_ini()
+#analyzer.stop()

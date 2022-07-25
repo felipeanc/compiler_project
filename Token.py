@@ -37,6 +37,7 @@ class TKS(Enum):
     RPAR = auto() # RPAR )
     DD = auto() # double dot :
     CD = auto() # comma dot ;
+    COMMA = auto() # comma ,
     EOF = auto() # end of file $
 
 @dataclass(init=True)
