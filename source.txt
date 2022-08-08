@@ -9,7 +9,18 @@ programa Teste begin
         x := y + 5;
       end
 
-    if(10 > 12) then
+    if(x < 10) then
+      begin
+        if(x < 5) then
+          begin
+            if(x < 3) then
+              begin
+                x := y;
+              end
+          end
+      end
+
+    if(x < 12) then
       begin
         x := z;
       end
