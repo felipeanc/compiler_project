@@ -1,0 +1,5 @@
+programa Teste begin
+  int: x;
+  x := 0;
+end
+$

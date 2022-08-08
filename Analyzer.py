@@ -93,7 +93,7 @@ class Analyzer:
             elif c == 'p':
               state = 13
             elif c == 'r':
-              state - 14
+              state = 14
             elif c == 't':
               state = 15
             elif c == 'w':

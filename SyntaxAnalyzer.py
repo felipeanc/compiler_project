@@ -71,9 +71,12 @@ class SyntaxAnalyzer(Analyzer):
       self.prox_token = super(SyntaxAnalyzer, self).lex()
       if self.prox_token == TKS.LPAR:
         self.procedure_expr()
+        print("VOLTEI DO EXPR DEPOIS DO IF ", self.prox_token)
+        self.prox_token = super(SyntaxAnalyzer, self).lex()
         if self.prox_token == TKS.RPAR:
           self.prox_token = super(SyntaxAnalyzer, self).lex()
           if self.prox_token == TKS.THEN:
+            self.prox_token = super(SyntaxAnalyzer, self).lex()
             self.procedure_bloco()
             self.procedure_cmd1Linha()
             self.procedure_cmd()
@@ -83,25 +86,32 @@ class SyntaxAnalyzer(Analyzer):
             print("Error: ) expected")
       else:
             print("Error: ( expected")
+
     elif self.prox_token == TKS.ID:
       self.prox_token = super(SyntaxAnalyzer, self).lex()
       if self.prox_token == TKS.ATTR:
         print("ANTES DO EXPR ", self.prox_token)
         self.procedure_expr()
         print("VOLTEI DO EXPR ", self.prox_token)
-        self.prox_token = super(SyntaxAnalyzer, self).lex()
-        print("DPS DO EXPR ", self.prox_token)
-        if self.prox_token != TKS.CD:
-            print("Error: ; expected")
-        else:
+        if self.prox_token == TKS.CD:
           self.prox_token = super(SyntaxAnalyzer, self).lex()
           self.procedure_cmd()
+        else:
+          self.prox_token = super(SyntaxAnalyzer, self).lex()
+          print("DPS DO EXPR ", self.prox_token)
+          if self.prox_token != TKS.CD:
+              print("Error: ; expected")
+          else:
+            self.prox_token = super(SyntaxAnalyzer, self).lex()
+            self.procedure_cmd()
       else:
-        print("Error: '=' expected")
+        print("Error: ':=' expected")
+
     elif self.prox_token == TKS.WHILE:
       self.prox_token = super(SyntaxAnalyzer, self).lex()
       if self.prox_token == TKS.LPAR:
         self.procedure_expr()
+        print("VOLTEI DO EXPR DENTRO DO WHILE", self.prox_token)
         self.prox_token = super(SyntaxAnalyzer, self).lex()
         if self.prox_token == TKS.RPAR:
           self.prox_token = super(SyntaxAnalyzer, self).lex()
@@ -115,12 +125,16 @@ class SyntaxAnalyzer(Analyzer):
             print("Error: ) expected")
       else:
             print("Error: ( expected")
+
     elif self.prox_token == TKS.REPEAT:
+      self.prox_token = super(SyntaxAnalyzer, self).lex() 
       self.procedure_bloco()
       if self.prox_token == TKS.WHILE:
         self.prox_token = super(SyntaxAnalyzer, self).lex() 
         if self.prox_token == TKS.LPAR:
-          self.procedure_expr() 
+          print("TESTE ANTES DO EXPR EM REPEAT, ", self.prox_token)
+          self.procedure_expr()
+          self.prox_token = super(SyntaxAnalyzer, self).lex() 
           if self.prox_token != TKS.RPAR:
             print("Error: ) expected")
           else:
@@ -147,12 +161,14 @@ class SyntaxAnalyzer(Analyzer):
     print("[syntax] Procedure fator")
     self.prox_token = super(SyntaxAnalyzer, self).lex()
     if self.prox_token == TKS.NUM:
+      self.prox_token = super(SyntaxAnalyzer, self).lex()
       self.procedure_fator1Linha()
     else:
       print("Error: num expected")
 
   #CHAMA PROX TOKEN
   def procedure_cmd1Linha(self):
+    print("[syntax] Procedure cmd1Linha")
     while self.prox_token == TKS.ELSE:
       self.prox_token = super(SyntaxAnalyzer, self).lex()
       self.procedure_bloco()
@@ -192,18 +208,20 @@ class SyntaxAnalyzer(Analyzer):
   def procedure_termo2Linha(self):
     print("[syntax] Procedure termo2Linha")
     while self.prox_token in [TKS.MULT, TKS.DIV, TKS.EXP]:
+      self.prox_token = super(SyntaxAnalyzer, self).lex()
       self.procedure_termo1Linha()
 
   #NÃO CHAMA PROX TOKEN
   def procedure_expr2Linha(self):
     print("[syntax] Procedure expr2Linha")
     while self.prox_token in [TKS.RELOP, TKS.SUM, TKS.DIF]:
+      self.prox_token = super(SyntaxAnalyzer, self).lex()
       self.procedure_expr1Linha()
 
-  #NÃO CHAMA PROX TOKEN
+  #CHAMA PROX TOKEN
   def procedure_fator1Linha(self):
     print("[syntax] Procedure fator1Linha")
     self.procedure_termo2Linha()
-    self.prox_token = super(SyntaxAnalyzer, self).lex()
     while self.prox_token in [TKS.RELOP, TKS.SUM, TKS.DIF]:
+      self.prox_token = super(SyntaxAnalyzer, self).lex()
       self.procedure_fator1Linha()

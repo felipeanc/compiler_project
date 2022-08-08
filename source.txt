@@ -1,28 +1,28 @@
-programa begin
-    int x, y, z;
-    char a;
-    float f;
+programa Teste begin
+    int: x, y, z;
+    float: a, b;
 
     x := 0;
 
-    while(x > y) do 
+    while(10 > 12) do 
       begin
-        x := y + z
+        x := 10 + 5;
       end
 
-    if(x > y) then
+    if(10 > 12) then
       begin
-        x := y
+        x := 15;
       end
     else
       begin
-        z := x
+        z := 20;
       end
 
-    repeat 
+    repeat
       begin
-        y := z
+        y := 10;
       end
-    while(y <= z)
+    while(10 <= 10)
     
 end
+$
