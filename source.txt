@@ -4,14 +4,14 @@ programa Teste begin
 
     x := 0;
 
-    while(10 > 12) do 
+    while(x > y) do 
       begin
-        x := 10 + 5;
+        x := y + 5;
       end
 
     if(10 > 12) then
       begin
-        x := 15;
+        x := z;
       end
     else
       begin

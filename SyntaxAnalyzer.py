@@ -160,7 +160,7 @@ class SyntaxAnalyzer(Analyzer):
   def procedure_fator(self):
     print("[syntax] Procedure fator")
     self.prox_token = super(SyntaxAnalyzer, self).lex()
-    if self.prox_token == TKS.NUM:
+    if self.prox_token == TKS.NUM or self.prox_token == TKS.ID:
       self.prox_token = super(SyntaxAnalyzer, self).lex()
       self.procedure_fator1Linha()
     else:
